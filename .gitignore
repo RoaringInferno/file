@@ -1,0 +1,60 @@
+# Build artifacts
+build/
+cmake-build-debug/
+cmake-build-release/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+*.cmake
+*.cbp
+*.depends
+*.layout
+*.pro.user
+*.pro.shared
+*.kdev4
+*.opensdf
+*.sln.docstates
+
+# IDE-specific files
+.vscode/
+.idea/
+.kdev4/
+*.swp
+*.swo
+*.tmp
+*.bak
+*.userosscache
+compile_commands.json
+
+# Operating system files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.lnk
+
+# Package managers
+vcpkg.json
+vcpkg-configuration.json
+vcpkg.lock
+
+# Documentation
+doc/html/
+doc/latex/
+
+# Test artifacts
+test-results/
+*.gcda
+*.gcno
+
+# Compiler intermediate files
+*.o
+*.obj
+*.d
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.so
+*.a
+*.exe
+*.dll
