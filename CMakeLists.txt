@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(cpp-start
+project(file
     VERSION 1.0.0
-    DESCRIPTION "Template repo for C++ projects."
+    DESCRIPTION "A simple and powerful library for file creation and manipulation."
     LANGUAGES CXX
 )
 
@@ -18,6 +18,7 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>
     PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 
