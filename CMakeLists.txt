@@ -10,9 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-file(GLOB_RECURSE SOURCES src/*.cpp)
-file(GLOB_RECURSE HEADERS include/*.h include/*.hpp)
-file(GLOB_RECURSE TESTS tests/*.cpp)
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS include/*.h include/*.hpp)
+file(GLOB TESTS tests/*.cpp)
+file(GLOB BENCHMARKS benchmarks/*.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
@@ -41,33 +42,23 @@ export(EXPORT ${PROJECT_NAME}-config
     NAMESPACE ${PROJECT_NAME}::
 )
 
-configure_package_config_file(
-    ${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}-config-install.in
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-)
-
 enable_testing()
+file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS tests/*.cpp)
 foreach(TEST_FILE ${TESTS})
-    # Get filename without extension
+    list(REMOVE_ITEM TEST_SOURCES ${TEST_FILE})
+endforeach()
+message(STATUS ${TESTS})
+foreach(TEST_FILE ${TESTS})
     get_filename_component(TEST_NAME_RAW ${TEST_FILE} NAME_WE)
     set(TEST_NAME ${PROJECT_NAME}_${TEST_NAME_RAW}_test)
-
-    # Create test executable
-    add_executable(${TEST_NAME} ${TEST_FILE})
-
-    # Link against required libraries
+    add_executable(${TEST_NAME} ${TEST_FILE} ${TEST_SOURCES})
     target_link_libraries(${TEST_NAME} PRIVATE
-        ${PROJECT_NAME}  # Link against main library
+        ${PROJECT_NAME}
     )
-
-    # Add test to CTest
     add_test(
         NAME ${TEST_NAME}
         COMMAND ${TEST_NAME}
     )
-
-    # Set test properties
     set_target_properties(${TEST_NAME} PROPERTIES
         CXX_VISIBILITY_PRESET "default"
         BUILD_WITHOUT_DEPENDS ON
@@ -80,3 +71,20 @@ set(CTEST_COMMAND ${CMAKE_CTEST_COMMAND})
 
 set(CTEST_TEST_TYPE "unit")
 set(CTEST_TEST_TIMEOUT 300)
+
+file(GLOB_RECURSE BENCHMARK_SOURCES CONFIGURE_DEPENDS benchmarks/*.cpp)
+foreach(BENCHMARK_FILE ${BENCHMARKS})
+    list(REMOVE_ITEM BENCHMARK_SOURCES ${BENCHMARK_FILE})
+endforeach()
+foreach(BENCHMARK_FILE ${BENCHMARKS})
+    get_filename_component(BENCHMARK_NAME_RAW ${BENCHMARK_FILE} NAME_WE)
+    set(BENCHMARK_NAME ${PROJECT_NAME}_${BENCHMARK_NAME_RAW}_benchmark)
+    add_executable(${BENCHMARK_NAME} ${BENCHMARK_FILE} ${BENCHMARK_SOURCES})
+    target_link_libraries(${BENCHMARK_NAME} PRIVATE
+        ${PROJECT_NAME}
+    )
+    set_target_properties(${BENCHMARK_NAME} PROPERTIES
+        CXX_VISIBILITY_PRESET "default"
+        BUILD_WITHOUT_DEPENDS ON
+    )
+endforeach()
