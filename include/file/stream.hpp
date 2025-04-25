@@ -62,7 +62,7 @@ namespace libfile
             Value val;
             read_var(is, key);
             read_var(is, val);
-            value[key] = val;
+            value.insert({key, val});
         }
     };
     template <typename First, typename Second> void write_var(std::ostream& os, const std::pair<First, Second>& value) { write_var(os, value.first); write_var(os, value.second); };

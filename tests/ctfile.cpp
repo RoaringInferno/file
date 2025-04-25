@@ -44,7 +44,7 @@ void test_vector()
     {
         libfile::ctfile<data_t> file(filepath);
         file.load();
-        for (int i = 0; i < depth; i++) { assert(file.data()[i] == data[i]); };
+        for (int i = 0; i < container_depth; i++) { assert(file.data()[i] == data[i]); };
     }
     std::cout << "vector<int> test passed\n";
 };
@@ -60,7 +60,7 @@ void test_unordered_map()
     {
         libfile::ctfile<data_t> file(filepath);
         file.load();
-        for (int i = 0; i < depth; i++) { assert(file.data()[i] == data[i]); };
+        for (int i = 0; i < container_depth; i++) { assert(file.data()[i] == data[i]); };
     }
     std::cout << "unordered_map<int, int> test passed\n";
 };
@@ -69,8 +69,8 @@ void test_vector_vector()
     typedef std::vector<int> nested_data_t;
     typedef std::vector<nested_data_t> data_t;
     data_t data;
-    data.resize(depth);
-    for (int i = 0; i < depth; i++) { data[i] = make_vector(); }
+    data.resize(container_depth);
+    for (int i = 0; i < container_depth; i++) { data[i] = make_vector(); }
     {
         libfile::ctfile<data_t> file(filepath);
         file.data() = data;
@@ -79,10 +79,10 @@ void test_vector_vector()
     {
         libfile::ctfile<data_t> file(filepath);
         file.load();
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i < container_depth; i++) {
             nested_data_t &nested_filedata = file.data()[i];
             nested_data_t &nested_data = data[i];
-            for (int j = 0; j < depth; j++) { assert(nested_data[j] == nested_filedata[j]); }
+            for (int j = 0; j < container_depth; j++) { assert(nested_data[j] == nested_filedata[j]); }
         };
     }
     std::cout << "vector<vector<int>> test passed\n";
@@ -93,7 +93,7 @@ void test_vector_unordered_map()
     typedef std::vector<int> nested_data_t;
     typedef std::unordered_map<int, nested_data_t> data_t;
     data_t data;
-    for (int i = 0; i < depth; i++) { data[i] = make_vector(); }
+    for (int i = 0; i < container_depth; i++) { data.insert({i, make_vector()}); }
     {
         libfile::ctfile<data_t> file(filepath);
         file.data() = data;
@@ -102,10 +102,10 @@ void test_vector_unordered_map()
     {
         libfile::ctfile<data_t> file(filepath);
         file.load();
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i < container_depth; i++) {
             nested_data_t &nested_filedata = file.data()[i];
             nested_data_t &nested_data = data[i];
-            for (int j = 0; j < depth; j++) { assert(nested_data[j] == nested_filedata[j]); }
+            for (int j = 0; j < container_depth; j++) { assert(nested_data[j] == nested_filedata[j]); }
         };
     }
     std::cout << "unordered_map<int, vector<int>> test passed\n";
@@ -116,8 +116,8 @@ void test_unordered_map_vector()
     typedef std::unordered_map<int, int> nested_data_t;
     typedef std::vector<nested_data_t> data_t;
     data_t data;
-    data.resize(depth);
-    for (int i = 0; i < depth; i++) { data[i] = make_unordered_map(); }
+    data.resize(container_depth);
+    for (int i = 0; i < container_depth; i++) { data[i] = make_unordered_map(); }
     {
         libfile::ctfile<data_t> file(filepath);
         file.data() = data;
@@ -126,10 +126,10 @@ void test_unordered_map_vector()
     {
         libfile::ctfile<data_t> file(filepath);
         file.load();
-        for (int i = 0; i < depth; i++) {
+        for (int i = 0; i < container_depth; i++) {
             nested_data_t &nested_filedata = file.data()[i];
             nested_data_t &nested_data = data[i];
-            for (int j = 0; j < depth; j++) { assert(nested_data[j] == nested_filedata[j]); }
+            for (int j = 0; j < container_depth; j++) { assert(nested_data[j] == nested_filedata[j]); }
         };
     }
     std::cout << "vector<unordered_map<int, int>> test passed\n";
@@ -155,8 +155,8 @@ void test_string_vector()
 {
     typedef std::vector<std::string> data_t;
     data_t data;
-    data.resize(depth);
-    for (int i = 0; i < depth; i++) { data[i] = make_string(); }
+    data.resize(container_depth);
+    for (int i = 0; i < container_depth; i++) { data[i] = make_string(); }
     {
         libfile::ctfile<data_t> file(filepath);
         file.data() = data;
@@ -165,7 +165,7 @@ void test_string_vector()
     {
         libfile::ctfile<data_t> file(filepath);
         file.load();
-        for (int i = 0; i < depth; i++) { assert(file.data()[i] == data[i]); };
+        for (int i = 0; i < container_depth; i++) { assert(file.data()[i] == data[i]); };
     }
     std::cout << "vector<string> test passed\n";
 };
@@ -173,7 +173,7 @@ void test_string_unordered_map()
 {
     typedef std::unordered_map<int, std::string> data_t;
     data_t data;
-    for (int i = 0; i < depth; i++) { data[i] = make_string(); }
+    for (int i = 0; i < container_depth; i++) { data[i] = make_string(); }
     {
         libfile::ctfile<data_t> file(filepath);
         file.data() = data;
@@ -182,7 +182,7 @@ void test_string_unordered_map()
     {
         libfile::ctfile<data_t> file(filepath);
         file.load();
-        for (int i = 0; i < depth; i++) { assert(file.data()[i] == data[i]); };
+        for (int i = 0; i < container_depth; i++) { assert(file.data()[i] == data[i]); };
     }
     std::cout << "unordered_map<int, string> test passed\n";
 };
